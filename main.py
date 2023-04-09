@@ -7,11 +7,24 @@ import json
 def play_video(id_):
     os.system(f'mpv "https://youtu.be/{id_}"')
 
-def videos_channel():
-    pass
+def videos_channel(id_):
+    videos_in_ch = ChannelSearch(".", id_, searchPreferences=VideoSortOrder.uploadDate)
+
+    with open('test.json', 'w') as f:
+        json.dump(videos_in_ch.result(), f, indent=4, ensure_ascii=False)
 
 def channel_search():
-    pass
+    name = input("Channel name: ")
+
+    channels = ChannelsSearch(name)
+    menu = ConsoleMenu("Select channel", "Select channel to list")
+
+    for channel in channels.result()["result"]:
+        v = FunctionItem(f'{channel["title"]} {channel["subscribers"]}', videos_channel, [channel["id"]])
+        menu.append_item(v)
+
+    menu.show()
+
 
 def video_search():
     name = input("Video name: ")
@@ -31,11 +44,9 @@ def main():
 
     search_video = FunctionItem("Video search", video_search)
     search_channel = FunctionItem("Channel search", channel_search)
-    videos_in_channel = FunctionItem("Videos in channel", videos_channel)
 
     menu.append_item(search_video)
     menu.append_item(search_channel)
-    menu.append_item(videos_in_channel)
     menu.show()
 
 if __name__ == "__main__":
