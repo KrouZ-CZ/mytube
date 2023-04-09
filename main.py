@@ -2,7 +2,6 @@ from youtubesearchpython import *
 from consolemenu import *
 from consolemenu.items import *
 import os
-import json
 
 def play_video(id_):
     os.system(f'mpv "https://youtu.be/{id_}"')
