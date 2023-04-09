@@ -7,20 +7,25 @@ import json
 def play_video(id_):
     os.system(f'mpv "https://youtu.be/{id_}"')
 
-def videos_channel(id_):
-    videos_in_ch = ChannelSearch(".", id_, searchPreferences=VideoSortOrder.uploadDate)
+def videos_channel(nid):
+    videos_in_ch = ChannelSearch(*nid)
+    menu = ConsoleMenu("Select video", "Select video to play")
 
-    with open('test.json', 'w') as f:
-        json.dump(videos_in_ch.result(), f, indent=4, ensure_ascii=False)
+    for video in videos_in_ch.result()['result']:
+        if video["type"] != "video": continue
+        v = FunctionItem(f'{video["title"]} [{video["views"]["simple"]}]', play_video, [video["id"]])
+        menu.append_item(v)
+
+    menu.show()
 
 def channel_search():
     name = input("Channel name: ")
 
     channels = ChannelsSearch(name)
-    menu = ConsoleMenu("Select channel", "Select channel to list")
+    menu = ConsoleMenu("Select channel", "Select channel in list")
 
     for channel in channels.result()["result"]:
-        v = FunctionItem(f'{channel["title"]} {channel["subscribers"]}', videos_channel, [channel["id"]])
+        v = FunctionItem(f'{channel["title"]} {channel["subscribers"]}', videos_channel, [[channel["title"], channel["id"]]])
         menu.append_item(v)
 
     menu.show()
