@@ -12,3 +12,6 @@ class Enige:
 
     def from_subscribes(self):
         pass
+
+if __name__ == "__main__":
+    pass
